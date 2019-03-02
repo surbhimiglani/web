@@ -1,0 +1,148 @@
+  <head>
+    <title>Simple Map</title>
+    <meta name="viewport" content="initial-scale=1.0">
+    <meta charset="utf-8">
+    <style>
+      #map {
+        height: 600px;
+        width: 1200px;
+      }
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+  </head>
+
+ {{# each marker}}
+ <h1> {{this.lat}} </h1>
+ 
+ {{/each}}
+
+  <div style="height:100%; width:100%;">
+   <div id="map"></div>
+   <button id='get'>Get Directions</button>
+   <button id='get2'>change location</button>
+
+  </div>
+    <script>
+      var map;
+      var directionDisplay;
+      var directionService;
+      var a;
+      var b;
+      function initMap() {
+         directionDisplay = new google.maps.DirectionsRenderer();
+         directionService = new google.maps.DirectionsService();
+         
+          a = new google.maps.LatLng(28.7738, 77.1273);
+          b = new google.maps.LatLng(28.7495, 77.0565);
+
+        map = new google.maps.Map(document.getElementById('map'), {
+          center: {lat: 28.6687, lng: 77.1019},
+          zoom: 12
+        });
+
+          directionDisplay.setMap(map);
+          {{# each marker}}
+          var myLatLng = {lat: {{this.lat}}, lng: {{this.lang}} };
+
+          var mark = new google.maps.Marker({
+            position: myLatLng,
+            map: map,
+            title: 'Red Light!'
+          });
+
+         {{/each}} 
+      }
+
+         function calculateRoute(){
+             var request = {
+               origin : a,
+               destination : b,
+               travelMode : 'DRIVING'
+             }
+
+             directionService.route(request, function(result, status){
+               if(status=='OK'){
+                  directionDisplay.setDirections(result);
+                  showSteps(result);
+               }
+
+                  console.log(result, status);
+             });
+           }
+         
+
+           function showSteps(directionResult) {
+           // For each step, place a marker, and add the text to the marker's
+           // info window. Also attach the marker to an array so we
+           // can keep track of it and remove it when calculating new
+           // routes.
+           var myRoute = directionResult.routes[0].overview_polyline;
+
+           console.log('polyline encoded '+ myRoute);
+           console.log('polyline '+ decodePath(myRoute));
+           
+
+           {{!-- for (var i = 0; i < myRoute.steps.length; i++) {
+             var marker = new google.maps.Marker({
+             position: myRoute.steps[i].start_point,
+             map: map
+           });
+            attachInstructionText(marker, myRoute.steps[i].instructions);
+            markerArray[i] = marker; --}}
+          
+        }
+
+function attachInstructionText(marker, text) {
+  google.maps.event.addListener(marker, 'click', function() {
+    stepDisplay.setContent(text);
+    stepDisplay.open(map, marker);
+  });
+}
+
+           setInterval(function(){ 
+              calculateRoute();
+           }, 5000);
+
+             document.getElementById('get').onclick= function(){
+             };
+
+             document.getElementById('get2').onclick= function(){
+              var request = new XMLHttpRequest();
+
+               // Open a new connection, using the GET request on the URL endpoint
+                request.open('GET', 'http://localhost:3000/api/api', true);
+
+                request.onload = function () {
+                    var data = JSON.parse(this.response);
+
+                    if (request.status >= 200 && request.status < 400) {
+                    data.forEach(movie => {
+                       console.log(movie);
+                       a = new google.maps.LatLng(movie.lat, movie.lang);
+                     });
+                    } else {
+                      console.log('error');
+                    }
+                }
+          
+                // Send request
+                request.send();
+        
+             };
+
+    </script>
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD0w45IIs32pGIFWLiQThakYAeC-FvQDpo&callback=initMap">
+  </script>
+
+
+
+{{!-- send 5 5 seconds api call-
+update current location -
+traffic lights on the route 
+calculate distance between current location and traffic lights
+get one for each ambulance id, update location in api -
+--}}

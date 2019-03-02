@@ -1,0 +1,45 @@
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+</head>
+
+<h1>{{title}}</h1>
+<p>Welcome to {{title}}</p>
+		  <form action="/map" method="POST">
+             <button type="submit" class="btn btn-success" >Save to Orders</button>
+			</form>
+
+             <button onclick="apicall();">Save to Orders</button>
+             <label id="jsondata"></label>
+
+     	<script>
+
+          function apicall(){
+
+            {{!-- const userAction = async () => {
+                    const response = await fetch('http://localhost:3000/api/api');
+                    const myJson = await response.json(); //extract JSON from the http response
+
+                  } --}}
+
+            var request = new XMLHttpRequest();
+
+            // Open a new connection, using the GET request on the URL endpoint
+            request.open('GET', 'http://localhost:3000/api/api', true);
+
+            request.onload = function () {
+             // Begin accessing JSON data here
+                document.getElementById('jsondata').innerHTML=this.response;                       
+            }
+          
+            // Send request
+            request.send();
+          }
+
+       </script>
+       
