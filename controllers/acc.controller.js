@@ -29,7 +29,11 @@ exports.create = (req, res) => {
 
 // Retrieve and return all notes from the database.
 exports.findAll = (req, res) => {
-    Note.find()
+    // var options = {
+    //     "limit": 20,
+    //   };
+      
+    Note.find({})
     .then(notes => {
         res.send(notes);
     }).catch(err => {
