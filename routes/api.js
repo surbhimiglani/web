@@ -3,6 +3,10 @@ var express = require('express');
 const notes = require('../controllers/api.controller.js');
 const notes2 = require('../controllers/acc.controller.js');
 
+const notes3 = require('../controllers/ph.controller.js');
+
+const notes4 = require('../controllers/tl.controller.js');
+
 var router = express.Router();
 
 
@@ -35,6 +39,38 @@ var router = express.Router();
 
 
     router.delete('/acc/:noteId', notes2.delete);
+
+    
+    
+    // Create a new Note
+    router.post('/ph', notes3.create);
+
+    // Retrieve all Notes
+    router.get('/ph', notes3.findAll);
+
+    router.get('/ph/:noteId', notes3.findOne);
+
+    // Update a Note with noteId
+    router.put('/ph/:noteId', notes3.update);
+
+
+    router.delete('/ph/:noteId', notes3.delete);
+
+    // Create a new Note
+    router.post('/ph', notes3.create);
+
+    // Retrieve all Notes
+    router.get('/tl', notes4.findAll);
+
+    router.get('/tl/:noteId', notes4.findOne);
+
+    // Update a Note with noteId
+    router.put('/tl/:noteId', notes4.update);
+
+
+    router.delete('/tl/:noteId', notes4.delete);
+
+
 
 
 module.exports = router;

@@ -1,14 +1,19 @@
-const Note = require('../models/accelerator');
+const Note = require('../models/map');
 
 // Create and Save a new Note
 exports.create = (req, res) => {
-    console.log('kk'+ req.body.lat);
-  
+    console.log('ll'+ req.body.lat);
+    if(!req.body.lat || !req.body.lang) {
+        return res.status(400).send({
+            message: "Note content can not be empty"
+        });
+    }
+
     // Create a Note
     const note = new Note({
         lat: req.body.lat , 
         lang: req.body.lang,
-        deltaz: req.body.deltaz,
+        status: req.body.status
     });
 
     // Save Note in the database
@@ -24,11 +29,7 @@ exports.create = (req, res) => {
 
 // Retrieve and return all notes from the database.
 exports.findAll = (req, res) => {
-    // var options = {
-    //     "limit": 20,
-    //   };
-      
-    Note.find({})
+    Note.find()
     .then(notes => {
         res.send(notes);
     }).catch(err => {
@@ -73,7 +74,7 @@ exports.update = (req, res) => {
     Note.findByIdAndUpdate(req.params.noteId, {
         lat: req.body.lat , 
         lang: req.body.lang,
-        deltaz: req.body.deltaz
+        status: req.body.status
     }, {new: true})
     .then(note => {
         if(!note) {
